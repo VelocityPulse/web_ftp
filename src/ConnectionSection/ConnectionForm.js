@@ -1,10 +1,15 @@
 import React from 'react';
 import './ConnectionForm.css'
 
-
 class ConnectionForm extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleChangeAddress = this.handleChangeAddress.bind(this);
+		this.handleChangePort = this.handleChangePort.bind(this);
+		this.handleChangeUser = this.handleChangeUser.bind(this);
+		this.handleChangePassword = this.handleChangePassword.bind(this);
 
 		this.state = {
 			mAddress: null,
@@ -43,11 +48,6 @@ class ConnectionForm extends React.Component {
 			]
 		};
 
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleChangeAddress = this.handleChangeAddress.bind(this);
-		this.handleChangePort = this.handleChangePort.bind(this);
-		this.handleChangeUser = this.handleChangeUser.bind(this);
-		this.handleChangePassword = this.handleChangePassword.bind(this);
 	}
 
 	handleSubmit(event) {
@@ -72,6 +72,19 @@ class ConnectionForm extends React.Component {
 
 	handleChangePassword(event) {
 		this.setState({mPassword: event.target.value})
+	}
+
+	renderButton() {
+		return (
+			<button
+				className="ConnectionForm-input-button"
+				type="button"
+				value="Connect"
+				onClick={this.handleSubmit}
+			>
+				Connect
+			</button>
+		)
 	}
 
 	renderInput(id, inputInfo, inputType, placeHolder, name, onChange) {
@@ -105,7 +118,7 @@ class ConnectionForm extends React.Component {
 					})
 				}
 				<br/>
-				<input className="ConnectionForm-input-submit" type="submit" value="Connect"/>
+				{this.renderButton()}
 			</form>
 		)
 	}

@@ -11,6 +11,36 @@ class ConnectionForm extends React.Component {
 			mPort: null,
 			mUser: null,
 			mPassword: null,
+			template: [
+				{
+					inputInfo: "Server Address :",
+					inputType: "text",
+					placeHolder: "www.host.com",
+					name: "server_address",
+					onChange: this.handleChangeAddress
+				},
+				{
+					inputInfo: "Port :",
+					inputType: "number",
+					placeHolder: "Default : 20",
+					name: "port",
+					onChange: this.handleChangePort
+				},
+				{
+					inputInfo: "User Name :",
+					inputType: "text",
+					placeHolder: "UserA",
+					name: "user_name",
+					onChange: this.handleChangeUser
+				},
+				{
+					inputInfo: "Password :",
+					inputType: "password",
+					placeHolder: "********",
+					name: "password",
+					onChange: this.handleChangePassword
+				}
+			]
 		};
 
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -59,57 +89,32 @@ class ConnectionForm extends React.Component {
 		);
 	}
 
-	render() {
-		const template = [
-			{
-				inputInfo: "Server Address :",
-				inputType: "text",
-				placeHolder: "www.host.com",
-				name: "server_address",
-				onChange: this.handleChangeAddress
-			},
-			{
-				inputInfo: "Port :",
-				inputType: "number",
-				placeHolder: "Default : 20",
-				name: "port",
-				onChange: this.handleChangePort
-			},
-			{
-				inputInfo: "User Name :",
-				inputType: "text",
-				placeHolder: "UserA",
-				name: "user_name",
-				onChange: this.handleChangeUser
-			},
-			{
-				inputInfo: "Password :",
-				inputType: "password",
-				placeHolder: "********",
-				name: "password",
-				onChange: this.handleChangePassword
-			}
-		];
+	renderForm() {
+		return (
+			<form onSubmit={this.handleSubmit}>
+				{
+					this.state.template.map((data, idx) => {
+						return (this.renderInput(
+							idx,
+							data.inputInfo,
+							data.inputType,
+							data.placeHolder,
+							data.name,
+							data.onChange
+						));
+					})
+				}
+				<br/>
+				<input className="ConnectionForm-input-submit" type="submit" value="Connect"/>
+			</form>
+		)
+	}
 
+	render() {
 		return (
 			<div className="ConnectionForm-main">
 				<div className="ConnectionForm-title">Connection</div>
-				<form onSubmit={this.handleSubmit}>
-					{
-						template.map((data, idx) => {
-								return (this.renderInput(
-									idx,
-									data.inputInfo,
-									data.inputType,
-									data.placeHolder,
-									data.name,
-									data.onChange
-								));
-							})
-					}
-					<br/>
-					<input className="ConnectionForm-input-submit" type="submit" value="Connect"/>
-				</form>
+				{this.renderForm()}
 			</div>
 		);
 	}

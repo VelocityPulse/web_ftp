@@ -71,11 +71,6 @@ class ConnectionForm extends React.Component {
 		this.updateError('port', this.state.mPort);
 		this.updateError('user_name', this.state.mUser);
 		this.updateError('password', this.state.mPassword);
-		// this.state.template.find(elem => {
-		// 	if (elem.name === 'server_address') {
-		// 		return elem.hasError = (this.state.mAddress == null);
-		// 	}
-		// });
 		this.forceUpdate();
 	}
 

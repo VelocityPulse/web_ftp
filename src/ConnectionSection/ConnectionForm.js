@@ -5,7 +5,7 @@ class ConnectionForm extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleButton = this.handleButton.bind(this);
 		this.handleChangeAddress = this.handleChangeAddress.bind(this);
 		this.handleChangePort = this.handleChangePort.bind(this);
 		this.handleChangeUser = this.handleChangeUser.bind(this);
@@ -16,62 +16,87 @@ class ConnectionForm extends React.Component {
 			mPort: null,
 			mUser: null,
 			mPassword: null,
+			mInputStyleStatus: "ConnectionForm-input-value",
+			mAddressError: false,
+			mPortError: false,
+			mUserError: false,
+			mPasswordError: false,
 			template: [
 				{
+					name: "server_address",
 					inputInfo: "Server Address :",
 					inputType: "text",
 					placeHolder: "www.host.com",
-					name: "server_address",
-					onChange: this.handleChangeAddress
+					onChange: this.handleChangeAddress,
+					hasError: false
 				},
 				{
+					name: "port",
 					inputInfo: "Port :",
 					inputType: "number",
 					placeHolder: "Default : 20",
-					name: "port",
-					onChange: this.handleChangePort
+					onChange: this.handleChangePort,
+					hasError: false
 				},
 				{
+					name: "user_name",
 					inputInfo: "User Name :",
 					inputType: "text",
 					placeHolder: "UserA",
-					name: "user_name",
-					onChange: this.handleChangeUser
+					onChange: this.handleChangeUser,
+					hasError: false
 				},
 				{
+					name: "password",
 					inputInfo: "Password :",
 					inputType: "password",
 					placeHolder: "********",
-					name: "password",
-					onChange: this.handleChangePassword
+					onChange: this.handleChangePassword,
+					hasError: false
 				}
 			]
 		};
-
 	}
 
-	handleSubmit(event) {
-		// this.setState({value: event.target.value});
-		console.log(this.state.mAddress);
-		console.log(this.state.mPort);
-		console.log(this.state.mUser);
-		console.log(this.state.mPassword);
+	updateError(name, content) {
+		this.state.template.find(elem => {
+			if (elem.name === name) {
+				return elem.hasError = (content == null || content.length <= 0);
+			}
+		});
+	}
+
+	handleButton(event) {
+		this.updateError('server_address', this.state.mAddress);
+		this.updateError('port', this.state.mPort);
+		this.updateError('user_name', this.state.mUser);
+		this.updateError('password', this.state.mPassword);
+		// this.state.template.find(elem => {
+		// 	if (elem.name === 'server_address') {
+		// 		return elem.hasError = (this.state.mAddress == null);
+		// 	}
+		// });
+		this.forceUpdate();
 	}
 
 	handleChangeAddress(event) {
-		this.setState({mAddress: event.target.value})
+		this.updateError('server_address', event.target.value);
+		this.setState({mAddress: event.target.value});
 	}
 
 	handleChangePort(event) {
-		this.setState({mPort: event.target.value})
+		this.updateError('port', event.target.value);
+		this.setState({mPort: event.target.value});
 	}
 
 	handleChangeUser(event) {
-		this.setState({mUser: event.target.value})
+		this.updateError('user_name', event.target.value);
+		this.setState({mUser: event.target.value});
 	}
 
 	handleChangePassword(event) {
-		this.setState({mPassword: event.target.value})
+		this.updateError('password', event.target.value);
+		this.setState({mPassword: event.target.value});
 	}
 
 	renderButton() {
@@ -80,43 +105,35 @@ class ConnectionForm extends React.Component {
 				className="ConnectionForm-input-button"
 				type="button"
 				value="Connect"
-				onClick={this.handleSubmit}
+				onClick={this.handleButton}
 			>
 				Connect
 			</button>
 		)
 	}
 
-	renderInput(id, inputInfo, inputType, placeHolder, name, onChange) {
-		return (
-			<div key={id}>
-				<div className="ConnectionForm-info-input">{inputInfo}</div>
-				<input
-					className="ConnectionForm-input-value"
-					type={inputType}
-					placeholder={placeHolder}
-					name={name}
-					onChange={onChange}
-				/>
-			</div>
-		);
+	renderInputs() {
+		return this.state.template.map((data, idx) => {
+			return (
+				<div key={idx}>
+					<div className="ConnectionForm-info-input">{data.inputInfo}</div>
+					<input
+						className={data.hasError ? this.state.mInputStyleStatus + ' error' :
+								this.state.mInputStyleStatus}
+						type={data.inputType}
+						placeholder={data.placeHolder}
+						name={data.name}
+						onChange={data.onChange}
+					/>
+				</div>
+			)
+		});
 	}
 
 	renderForm() {
 		return (
-			<form onSubmit={this.handleSubmit}>
-				{
-					this.state.template.map((data, idx) => {
-						return (this.renderInput(
-							idx,
-							data.inputInfo,
-							data.inputType,
-							data.placeHolder,
-							data.name,
-							data.onChange
-						));
-					})
-				}
+			<form onSubmit={this.handleButton}>
+				{this.renderInputs()}
 				<br/>
 				{this.renderButton()}
 			</form>
